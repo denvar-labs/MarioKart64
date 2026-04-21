@@ -1130,7 +1130,7 @@ Asciiz("RETRY")
 Align(4)
 }
 
-// Versus All Cups Menu2 (MODIFICADA para VA Rules)
+// Versus All Cups Menu2 (CORREGIDA: VA Rules evita caso especial Rainbow Road)
 scope VersusAllCupsMenu2: {
   LuiLb(t0, Options+10)
   Enabled:
@@ -1143,6 +1143,10 @@ scope VersusAllCupsMenu2: {
     OriBeq(v1, 0x0C, at, Option3)
     OriBeq(v1, 0x0D, at, Option4)
     Option1:
+      // Verificar primero si es VA Rules para evitar el caso especial de Rainbow Road
+      LuiLb(t2, Options+3)
+      OriBeq(t2, 0x02, t1, VARainbowSkip)
+      // KA Rules: lógica original (con caso especial RRD -> LR)
       LuiLh(t0, CourseSelection1)
       RainbowRoad:
         OriBne(t0, 0x0D, t1, Lookup)
@@ -1153,12 +1157,12 @@ scope VersusAllCupsMenu2: {
         j 0x8009CF94
         nop
       Lookup:
-        LuiLb(t2, Options+3)
-        OriBeq(t2, 0x02, t1, UseVATable)
-        la t1, 0x800F2BB4
+        la t1, 0x800F2BB4      // tabla original
         b Loop
         nop
-      UseVATable:
+      VARainbowSkip:
+        // VA Rules: búsqueda directa en VATable sin caso especial
+        LuiLh(t0, CourseSelection1)
         la t1, VATable
       Loop:
         lh t2, 0 (t1)
