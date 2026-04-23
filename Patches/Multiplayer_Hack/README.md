@@ -15,6 +15,13 @@ This project is a fork of the excellent work by [FraySSB](https://github.com/Fra
 * `KA Rules` – Original track order (Mushroom → Flower → Star → Special).
 * `VA Rules` – Custom tournament order: (Mushroom → Special → Star → Flower).
 
+### ⚡ Bolt Fix (NEW)
+* Prevents the lightning item from launching you uncontrollably on downhill slopes.
+* When enabled, horizontal speed is capped at **90 km/h** while the lightning shrink effect is active (configurable in the source code).
+* The limit **only applies during the lightning effect**; normal gameplay and top speed are untouched.
+* Players using a Star (invincibility) are **not affected**, because the lightning does not shrink them.
+* Fully optional, selectable from the in‑game menu.
+
 ### ⚙️ Menu & Gameplay Options
 * **Game Pacing (Scaling):** `default`, `30 fps`, `60 fps` (moved to top of menu).
 * **Widescreen:** Toggle on/off.
@@ -35,10 +42,10 @@ This project is a fork of the excellent work by [FraySSB](https://github.com/Fra
 
 To know if the assembly is complete we should get the next md5, if not something is different than this build.
 ```
-[0223BDB88270ED989E553BDB22A49ED9]
-GoodName=Mario Kart 64 RMGK Netplay v2.0
-CRC=7DD8EB1E DF252AF8
-RefMD5=0223BDB88270ED989E553BDB22A49ED9
+[660AE689A8FB8A5851745FB972F1232E]
+GoodName=Mario Kart 64 RMGK Netplay v2.1
+CRC=2886046A 7CF81738
+RefMD5=660AE689A8FB8A5851745FB972F1232E
 CountPerOp=1
 ```
 
