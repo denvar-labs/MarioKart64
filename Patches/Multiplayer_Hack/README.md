@@ -13,7 +13,7 @@ This project is a fork of the excellent work by [FraySSB](https://github.com/Fra
 
 ### 🌐 Track Rules (KA/VA)
 * `KA Rules` – Original track order (Mushroom → Flower → Star → Special).
-* `VA Rules` – Custom tournament order: `LR → MMF → KTB → KD → DKJP → YV → BB → RRD → WS → SL → RRY → BC → TT → FS → CM → MR`.
+* `VA Rules` – Custom tournament order: (Mushroom → Special → Star → Flower).
 
 ### ⚙️ Menu & Gameplay Options
 * **Game Pacing (Scaling):** `default`, `30 fps`, `60 fps` (moved to top of menu).
@@ -58,7 +58,6 @@ To ensure a consistent and fair starting point for netplay, the default settings
 ## Credits
 * **FraySSB** & **abitalive** – Original multiplayer hacks.
 * **Jay-Day** – RMG-K emulator and netplay guidance.
-* **denvar-labs** – KA/VA rules, new character stats, and RMG-K optimizations.
 - Download and extract [these files](https://drive.google.com/file/d/0B1g_ALmgbOzxSDdWVVA4TXdwWlk/view?usp=sharing) to the Multiplayer_Hack directory
 - Drag and drop mk64_multiplayer_hack.asm onto asm.cmd
 
