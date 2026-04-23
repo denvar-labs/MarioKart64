@@ -1,36 +1,64 @@
-# Mario Kart 64 Multiplayer ROM Hack
-### Fray's Emulator/Netplay Build
-This is a fork of abitalive's Mario Kart 64 Multiplayer Hack which adds a couple of small updates to allow for an "improved" multiplayer experience on netplay or with emulators in general
+# Mario Kart 64 Netplay Hack (RMG-K Edition)
 
-# Changes
-## New TITLE MENU Options
-### Lag Fix (Default / Enabled)
-- This hack prevents the game from slowing down in 4 player matches
-- This setting is enabled by default, but is known to break on console, as well as cause issues with the final lap music when combined with 60 FPS
+This project is a fork of the excellent work by [FraySSB](https://github.com/FraySSB/MarioKart64) (which itself is based on abitalive's multiplayer hack), optimized for stable online multiplayer with the **RMG-K** emulator.
 
-### VS Bomb Karts (Default / Disabled)
-- Mini Bomb Karts can now be disabled for VS modes
+## ✨ Features & Changes
 
-### Polling Rate (Default / 30Hz)
-- This hack forces the input polling rate to remain at 30Hz when the game pacing is set to 60 FPS
-- This setting is enabled by default, and can help prevent the game from lagging when using kaillera netplay servers
+### 🏎️ Character Stats
+* Reorganized and expanded with four options:
+    * `default` – Original game stats.
+    * `all yoshi` – All characters use Yoshi's stats.
+    * `all wario` – All characters use Wario's stats.
+    * `more warios` – Yoshi, Toad, Peach, and Bowser use Wario's stats; others keep their own.
 
-## Modified TITLE MENU Options
-### Game Pacing
-- Added a hack which makes the game run at 60 FPS when the 60 FPS pacing option is selected.
+### 🌐 Track Rules (KA/VA)
+* `KA Rules` – Original track order (Mushroom → Flower → Star → Special).
+* `VA Rules` – Custom tournament order: `LR → MMF → KTB → KD → DKJP → YV → BB → RRD → WS → SL → RRY → BC → TT → FS → CM → MR`.
 
-### Reorganized Menu Options
-- Moved Character Stats and Game Pacing options to the top of the list
+### ⚙️ Menu & Gameplay Options
+* **Game Pacing (Scaling):** `default`, `30 fps`, `60 fps` (moved to top of menu).
+* **Widescreen:** Toggle on/off.
+* **Trophies:** Option to skip the ceremony.
+* **Multiplayer Music:** Force enabled.
+* **Multiplayer Train/Boat:** Enable full train or boat in DKJP.
+* **VS Bomb Karts:** Option to disable.
+* **VS Tracks:** Force all cups in Versus mode.
+* **VS Timer:** Enable countdown.
+* **Gold Mushroom:** `default`, `feather small`, `feather big`.
+* **Items:** Assign specific items to Player 1–8.
+* **VS Scores:** Display scores on-screen.
+* **Polling Rate Fix:** Forces 30Hz input polling to reduce lag on Kaillera servers.
 
-### Changed Default Settings
-- Character Stats are **no longer** All Yoshi by default
-- Game Pacing is now 30 FPS by default
-- Trophy Ceremony is now skipped by default
-- Multiplayer Music is now enabled by default
+### 🛠️ Optimizations & Fixes
+* **Lag Fix Removed:** The old "Lag Fix" patch was known to break on console and cause audio issues with 60 FPS. It is unnecessary for RMG-K and has been completely removed.
+* **RMG-K Netplay Optimized:** Configured to force `CountPerOp=1` via `mupen64plus.ini`, preventing desyncs in online play. Add this to your RMG-K ROM settings:
 
-# Building (Windows)
-- Clone or download the repository
-- Put "Mario Kart 64 (U) [!].z64" in the LIB directory
+[89389AA3A32D7CF71455D093C8C8FCD4]
+GoodName=Mario Kart 64 RMGK Netplay v1
+CRC=A34EFD8D E1F4F066
+RefMD5=89389AA3A32D7CF71455D093C8C8FCD4
+CountPerOp=1
+
+### ⚖️ Default Settings
+To ensure a consistent and fair starting point for netplay, the default settings are:
+* `stats` : `default`
+* `scaling` : `30 fps`
+* `tracks` : `KA Rules`
+* `widescreen` : `default`
+* `trophies` : `skip`
+* `mp music` : `enabled`
+* `vs bombs` : `disabled`
+
+## How to Build
+1. Clone this repository.
+2. Place a clean **"Mario Kart 64 (U) [!].z64"** ROM in the `LIB/` folder.
+3. Assemble with **bass**:  
+ `bass Patches/Multiplayer_Hack/mk64_multiplayer_hack.asm`
+
+## Credits
+* **FraySSB** & **abitalive** – Original multiplayer hacks.
+* **Jay-Day** – RMG-K emulator and netplay guidance.
+* **denvar-labs** – KA/VA rules, new character stats, and RMG-K optimizations.
 - Download and extract [these files](https://drive.google.com/file/d/0B1g_ALmgbOzxSDdWVVA4TXdwWlk/view?usp=sharing) to the Multiplayer_Hack directory
 - Drag and drop mk64_multiplayer_hack.asm onto asm.cmd
 
