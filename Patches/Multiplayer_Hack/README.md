@@ -33,11 +33,14 @@ This project is a fork of the excellent work by [FraySSB](https://github.com/Fra
 * **Lag Fix Removed:** The old "Lag Fix" patch was known to break on console and cause audio issues with 60 FPS. It is unnecessary for RMG-K and has been completely removed.
 * **RMG-K Netplay Optimized:** Configured to force `CountPerOp=1` via `mupen64plus.ini`, preventing desyncs in online play. Add this to your RMG-K ROM settings:
 
-[0223BDB88270ED989E553BDB22A49ED9].
-GoodName=Mario Kart 64 RMGK Netplay v2.0.
-CRC=7DD8EB1E DF252AF8.
-RefMD5=0223BDB88270ED989E553BDB22A49ED9.
-CountPerOp=1.
+To know if the assembly is complete we should get the next md5, if not something is different than this build.
+```
+[0223BDB88270ED989E553BDB22A49ED9]
+GoodName=Mario Kart 64 RMGK Netplay v2.0
+CRC=7DD8EB1E DF252AF8
+RefMD5=0223BDB88270ED989E553BDB22A49ED9
+CountPerOp=1
+```
 
 ### ⚖️ Default Settings
 To ensure a consistent and fair starting point for netplay, the default settings are:
