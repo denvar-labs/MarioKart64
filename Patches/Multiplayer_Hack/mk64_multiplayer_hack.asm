@@ -61,6 +61,8 @@ scope Init: {
       sb t1, 10 (t0)
       sb t1, 14 (t0)
       sb t1, 15 (t0)
+	  ori   t2, r0, 0x01
+	  sb    t2, 16(t0)
   lw ra, 0x14 (sp)
   jr ra
   addiu sp, 0x18
@@ -129,6 +131,10 @@ dd MenuEntry14Setting1, MenuEntry14Setting2, 0x00000000
 dd 0x00000002 // Polling Rate Fix
 dd MenuEntry15
 dd MenuEntry15Setting1, MenuEntry15Setting2, 0x00000000
+
+dd 0x00000002 // Bolt Fix
+dd MenuEntry16
+dd MenuEntry16Setting1, MenuEntry16Setting2, 0x00000000
 
 dd 0x00000000, 0x00000000
 
@@ -258,6 +264,13 @@ MenuEntry15Setting1:
 Asciiz("default")
 MenuEntry15Setting2:
 Asciiz("30hz")
+
+MenuEntry16:
+Asciiz("bolt fix")
+MenuEntry16Setting1:
+Asciiz("default")
+MenuEntry16Setting2:
+Asciiz("enabled")
 
 TitleString:
 Asciiz("abitalive  weatherton  abney  sully")
@@ -671,6 +684,71 @@ End:
   nop
 Flag:
   fill 0x4
+}
+
+scope BoltFixFinal: {
+  // Preserve temporary registers
+  addiu sp, sp, -0x10
+  sw    t0, 0x00(sp)
+  sw    t1, 0x04(sp)
+  swc1  f0, 0x08(sp)
+
+  // Load velocity from memory (original instruction replaced)
+  lwc1  f20, 0x94(s0)
+
+  // Check if we are in a race (Versus=2 or Battle=3)
+  lui   t0, 0x800D
+  lw    t0, 0xC53C(t0)        // ModeSelection
+  addiu t1, r0, 2
+  beq   t0, t1, CheckLightning
+  addiu t1, r0, 3
+  beq   t0, t1, CheckLightning
+  b     WriteBack
+
+CheckLightning:
+  // Only apply clamp if player is under lightning effect
+  lbu   t0, 0x0D(s0)          // lightning timer (non-zero = active)
+  beq   t0, r0, WriteBack     // if zero, skip clamp
+
+  // Check Bolt Fix option (Options+16)
+  lui   t0, 0x8050
+  lbu   t0, 0x10(t0)          // Options+16
+  addiu t1, r0, 2
+  bne   t0, t1, WriteBack     // not "enabled", skip
+
+  // Clamp to +90.0f
+  lui   t1, 0x42B4
+  mtc1  t1, f0
+  c.lt.s f0, f20
+  bc1f  CheckNeg
+  nop
+  mov.s f20, f0
+  b     WriteBack
+  nop
+
+CheckNeg:
+  // Clamp to -90.0f
+  lui   t1, 0xC2B4
+  mtc1  t1, f0
+  c.lt.s f20, f0
+  bc1f  WriteBack
+  nop
+  mov.s f20, f0
+
+WriteBack:
+  // Store final velocity (clamped or original)
+  swc1  f20, 0x94(s0)
+
+  // Restore registers
+  lwc1  f0, 0x08(sp)
+  lw    t1, 0x04(sp)
+  lw    t0, 0x00(sp)
+  addiu sp, sp, 0x10
+
+  // Return to next instruction after the original swc1
+  li    t0, 0x80086F5C
+  jr    t0
+  nop
 }
 
 // VA custom order (internal IDs)
@@ -1403,6 +1481,11 @@ j GoldMushroom
 origin 0x07BB60
 base 0x8007AF60
 jal PlayerItems
+
+origin 0x0086F58
+base 0x80086F58
+j BoltFixFinal
+nop
 
 origin 0x003314
 base 0x80002714
