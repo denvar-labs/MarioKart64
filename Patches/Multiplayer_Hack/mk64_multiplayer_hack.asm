@@ -9,7 +9,7 @@ include "..\LIB\macros.inc"
 origin 0x0
 insert "..\LIB\Mario Kart 64 (U) [!].z64"
 
-// change ROM name
+// ROM name
 origin  0x20
 db  "MK64 NETPLAY"
 fill 0x34 - origin(), 0x20
@@ -66,11 +66,11 @@ scope Init: {
   addiu sp, 0x18
 }
 
-// Menu Strings - solo KA y VA
+// Menu Strings
 MenuStrings:
-dd 0x00000002 // Character Stats
+dd 0x00000004 // Character Stats (4 options)
 dd MenuEntry1
-dd MenuEntry1Setting1, MenuEntry1Setting2, 0x00000000
+dd MenuEntry1Setting1, MenuEntry1Setting2, MenuEntry1Setting3, MenuEntry1Setting4, 0x00000000
 
 dd 0x00000003 // Scaling
 dd MenuEntry2
@@ -138,6 +138,10 @@ MenuEntry1Setting1:
 Asciiz("default")
 MenuEntry1Setting2:
 Asciiz("all yoshi")
+MenuEntry1Setting3:
+Asciiz("all wario")
+MenuEntry1Setting4:
+Asciiz("more warios")
 
 MenuEntry2:
 Asciiz("scaling")
@@ -449,34 +453,65 @@ End:
   nop
 }
 
-// Character Stats
+// Character Stats (4 options: default, all yoshi, all wario, more warios)
 scope CharacterStats: {
   addiu sp, -0x18
   sw ra, 0x14 (sp)
   jal 0x800010CC
   nop
   LuiLb(t0, Options+1)
-  Disabled:
-    OriBne(t0, 0x01, t1, Yoshi)
-    la a0, 0x800E2360
-    li a1, 0x0E2F60
-    li a2, 0x14B0
-    jal DmaCopy
-    nop
-    b End
-    nop
-  Yoshi:
-    OriBne(t0, 0x02, t1, End)
-    li a0, YoshiMain
-    la a1, 0x800E2360
-    li a2, 0x14B0
-    jal BCopy
-    nop
-    li a0, YoshiWeight
-    la a1, 0x802B8790
-    li a2, 0x20
-    jal BCopy
-    nop
+  // Default (1)
+  OriBne(t0, 0x01, t1, CheckYoshi)
+  la a0, 0x800E2360
+  li a1, 0x0E2F60
+  li a2, 0x14B0
+  jal DmaCopy
+  nop
+  b End
+  nop
+CheckYoshi:
+  // All Yoshi (2)
+  OriBne(t0, 0x02, t1, CheckAllWario)
+  li a0, YoshiMain
+  la a1, 0x800E2360
+  li a2, 0x14B0
+  jal BCopy
+  nop
+  li a0, YoshiWeight
+  la a1, 0x802B8790
+  li a2, 0x20
+  jal BCopy
+  nop
+  b End
+  nop
+CheckAllWario:
+  // All Wario (3)
+  OriBne(t0, 0x03, t1, CheckMoreWarios)
+  li a0, AllWarioMain
+  la a1, 0x800E2360
+  li a2, 0x14B0
+  jal BCopy
+  nop
+  li a0, AllWarioWeight
+  la a1, 0x802B8790
+  li a2, 0x20
+  jal BCopy
+  nop
+  b End
+  nop
+CheckMoreWarios:
+  // More Warios (4)
+  OriBne(t0, 0x04, t1, End)
+  li a0, MoreWariosMain
+  la a1, 0x800E2360
+  li a2, 0x14B0
+  jal BCopy
+  nop
+  li a0, MoreWariosWeight
+  la a1, 0x802B8790
+  li a2, 0x20
+  jal BCopy
+  nop
 End:
   lw ra, 0x14 (sp)
   jr ra
@@ -638,7 +673,7 @@ Flag:
   fill 0x4
 }
 
-// Tabla VA Rules con IDs INTERNOS CORRECTOS (orden personalizado)
+// VA custom order (internal IDs)
 VATable:
 db 0x00, 0x08  // LR
 db 0x00, 0x09  // MMF
@@ -675,7 +710,7 @@ VA_ContinueText:
     AsciizAlign("CONTINUE TO MR", 0x14)
     AsciizAlign("CONTINUE TO LR", 0x14)
 
-// Random Tracks (CORREGIDA: omite KA y VA)
+// Random Tracks (skipped for KA/VA)
 scope RandomTracks: {
   LuiLb(t0, Options+3)
   OriBeq(t0, 0x01, t1, End)
@@ -827,7 +862,7 @@ End:
   nop
 }
 
-// Versus All Cups (LÓGICA ORIGINAL)
+// Versus All Cups (original logic)
 scope VersusAllCups: {
   addiu sp, -0x18
   sw ra, 0x14 (sp)
@@ -1040,7 +1075,7 @@ End:
   addu v0, t6, r0
 }
 
-// Versus All Cups Menu (CORREGIDA: VA Rules sin incremento)
+// Continue menu text selection
 scope VersusAllCupsMenu: {
   LuiLb(t0, Options+10)
   OriBne(t0, 0x02, t1, Disabled)
@@ -1050,7 +1085,7 @@ scope VersusAllCupsMenu: {
   LuiLb(t0, Options+3)
   OriBeq(t0, 0x02, t1, VAMenu)
 
-  // KA Rules: lógica original (basada en Cup/Course2)
+  // KA Rules
   LuiLb(t0, CupSelection)
   sll t0, t0, 0x02
   LuiLb(t1, CourseSelection2)
@@ -1063,7 +1098,6 @@ scope VersusAllCupsMenu: {
   nop
 
 VAMenu:
-  // VA Rules: buscar pista actual en VATable y usar el índice directamente
   LuiLh(t0, CourseSelection1)
   la t1, VATable
   li t2, 0
@@ -1076,9 +1110,8 @@ SearchVA:
   addiu t2, 1
   bne t2, t3, SearchVA
   nop
-  li t2, 0        // no encontrado -> índice 0
+  li t2, 0
 FoundVA:
-  // t2 = índice de la pista actual en VATable
   ori t3, r0, 0x14
   multu t2, t3
   mflo t1
@@ -1130,7 +1163,7 @@ Asciiz("RETRY")
 Align(4)
 }
 
-// Versus All Cups Menu2 (CORREGIDA: VA Rules evita caso especial Rainbow Road)
+// Continue button action (handles track advance)
 scope VersusAllCupsMenu2: {
   LuiLb(t0, Options+10)
   Enabled:
@@ -1143,10 +1176,8 @@ scope VersusAllCupsMenu2: {
     OriBeq(v1, 0x0C, at, Option3)
     OriBeq(v1, 0x0D, at, Option4)
     Option1:
-      // Verificar primero si es VA Rules para evitar el caso especial de Rainbow Road
       LuiLb(t2, Options+3)
       OriBeq(t2, 0x02, t1, VARainbowSkip)
-      // KA Rules: lógica original (con caso especial RRD -> LR)
       LuiLh(t0, CourseSelection1)
       RainbowRoad:
         OriBne(t0, 0x0D, t1, Lookup)
@@ -1157,13 +1188,38 @@ scope VersusAllCupsMenu2: {
         j 0x8009CF94
         nop
       Lookup:
-        la t1, 0x800F2BB4      // tabla original
+        la t1, 0x800F2BB4
         b Loop
         nop
       VARainbowSkip:
-        // VA Rules: búsqueda directa en VATable sin caso especial
         LuiLh(t0, CourseSelection1)
         la t1, VATable
+        li t2, 0
+        li t3, 16
+      SearchVALoop:
+        lh t4, 0 (t1)
+        beq t0, t4, FoundVA
+        nop
+        addiu t1, 2
+        addiu t2, 1
+        bne t2, t3, SearchVALoop
+        nop
+        li t2, 0
+        la t1, VATable
+      FoundVA:
+        addiu t2, t2, 1
+        andi t2, t2, 0x0F
+        sll t3, t2, 1
+        la t1, VATable
+        addu t1, t1, t3
+        lh t1, 0 (t1)
+        LuiSh(t1, CourseSelection1, t0)
+        srl t1, t2, 2
+        andi t2, t2, 3
+        LuiSb(t1, CupSelection, t3)
+        LuiSb(t2, CourseSelection2, t3)
+        j 0x8009CF94
+        nop
       Loop:
         lh t2, 0 (t1)
         beq t0, t2, Increment
@@ -1205,8 +1261,10 @@ End:
   nop
 }
 
-// Character Stats
+// Include stats files
 include "stats_yoshi.asm"
+include "stats_all_wario.asm"
+include "stats_more_warios.asm"
 
 fill 0xC00000 - origin()
 
