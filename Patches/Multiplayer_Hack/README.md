@@ -43,7 +43,7 @@ This project is a fork of the excellent work by [FraySSB](https://github.com/Fra
 To know if the assembly is complete we should get the next md5, if not something is different than this build.
 ```
 [660AE689A8FB8A5851745FB972F1232E]
-GoodName=Mario Kart 64 RMGK Netplay v2.1
+GoodName=Mario Kart 64 RMGK Netplay v2
 CRC=2886046A 7CF81738
 RefMD5=660AE689A8FB8A5851745FB972F1232E
 CountPerOp=1
