@@ -1410,11 +1410,11 @@ dd $800E32A8
 dd $800E32A8
 
 KartHandling_MoreWarios:
-float32 1.28 // Mario
-float32 1.28 // Luigi
+float32 1.25 // Mario (orig)
+float32 1.25 // Luigi (orig)
 float32 1.15 // Yoshi -> Wario
 float32 1.15 // Toad  -> Wario
-float32 1.28 // D.K.
+float32 1.15 // D.K.  (orig)
 float32 1.15 // Wario
 float32 1.15 // Peach -> Wario
 float32 1.15 // Bowser-> Wario
@@ -1434,7 +1434,7 @@ float32  0.0   // Mario
 float32  0.0   // Luigi
 float32 -0.002 // Yoshi -> Wario
 float32 -0.002 // Toad  -> Wario
-float32  0.0   // D.K.
+float32 -0.002 // D.K.  (orig)
 float32 -0.002 // Wario
 float32 -0.002 // Peach -> Wario
 float32 -0.002 // Bowser-> Wario
@@ -1444,17 +1444,17 @@ float32  0.0   // Mario
 float32  0.0   // Luigi
 float32 -0.002 // Yoshi -> Wario
 float32 -0.002 // Toad  -> Wario
-float32  0.0   // D.K.
+float32 -0.002 // D.K.  (orig)
 float32 -0.002 // Wario
 float32 -0.002 // Peach -> Wario
 float32 -0.002 // Bowser-> Wario
 
 KartUnknownTurn2_MoreWarios:
-float32 3.0 // Mario
-float32 3.0 // Luigi
+float32 2.0 // Mario (orig)
+float32 2.0 // Luigi (orig)
 float32 1.5 // Yoshi -> Wario
 float32 1.5 // Toad  -> Wario
-float32 3.0 // D.K.
+float32 1.5 // D.K.  (orig)
 float32 1.5 // Wario
 float32 1.5 // Peach -> Wario
 float32 1.5 // Bowser-> Wario
